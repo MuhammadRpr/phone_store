@@ -38,6 +38,7 @@ export const createUserHandler = async (req, res, next) => {
 
         res.status(201).json({
             status: "success",
+            message: "User berhasil dibuat",
             data: response,
         });
     } catch (error) {
@@ -45,7 +46,9 @@ export const createUserHandler = async (req, res, next) => {
     }
 };
 
-export const updateUserHandler = async (req, res) => {
+
+
+export const updateUserHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
         const updateData = req.body;
@@ -58,15 +61,13 @@ export const updateUserHandler = async (req, res) => {
             data: response,
         });
     } catch (error) {
-        console.error(error);
-        res.status(400).json({
-            status: "error",
-            message: error.message || "Gagal memperbarui user",
-        });
+        next(error);
     }
 };
 
-export const deleteUserHandler = async (req, res) => {
+
+
+export const deleteUserHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
 
@@ -78,10 +79,6 @@ export const deleteUserHandler = async (req, res) => {
             data: response,
         });
     } catch (error) {
-        console.error(error);
-        res.status(400).json({
-            status: "error",
-            message: error.message || "Gagal menghapus user",
-        });
+        next(error);
     }
 };

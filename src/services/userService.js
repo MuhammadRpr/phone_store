@@ -32,4 +32,50 @@ export const createUser = async (request) => {
         { id: users.insertId, fullname, username, email, role };
     return newUser;
 }
+export const updateUser = async (id, updateData) => {
+    const userId = Number(id);
+
+
+    const [existingUser] = await pool.query("SELECT * FROM users WHERE id=?", [userId]);
+    if (existingUser.length === 0) {
+        throw new ResponseError(404, "User not found");
+    }
+
+    const { fullname, username, email, role, address, phone_number, age } = updateData;
+
+    const [result] = await pool.query(
+        `UPDATE users 
+         SET fullname=?, username=?, email=?, role=?, address=?, phone_number=?, age=? 
+         WHERE id=?`,
+        [fullname, username, email, role, address, phone_number, age, userId]
+    );
+
+
+    if (result.affectedRows === 0) {
+        throw new ResponseError(400, "Tidak ada perubahan pada data user");
+    }
+
+
+    const [updatedUser] = await pool.query(
+        `SELECT id, fullname, username, email, role, address, phone_number, age 
+         FROM users 
+         WHERE id=?`,
+        [userId]
+    );
+
+    return updatedUser[0];
+};
+
+
+export const deleteUser = async (id) => {
+    const userId = Number(id);
+
+    const [result] = await pool.query("DELETE FROM users WHERE id=?", [userId]);
+
+    if (result.affectedRows === 0) {
+        throw new ResponseError(404, "User not found");
+    }
+
+    return { message: "User deleted successfully" };
+};
 
