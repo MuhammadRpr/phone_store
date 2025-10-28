@@ -5,7 +5,7 @@ import { pool } from "../config/db.js";
 export const getAllProductsHandler = async (req, res) => {
 
     try {
-        const [products] = await pool.query("SELECT id, user_id, name, description, price, stock, created_at, updated_at FROM products");
+        const [products] = await pool.query("SELECT * FROM products");
 
         res.status(200).json({
             status: "success",
@@ -21,7 +21,7 @@ export const getProductByIdHandler = async (req, res) => {
 
     const { id } = req.params;
     try {
-        const [products] = await pool.query("SELECT user_id, name, description, price, stock, created_at, updated_at FROM products WHERE id=?", [id]);
+        const [products] = await pool.query("SELECT * FROM products WHERE id=?", [id]);
 
         if (products.length === 0) {
             return res.status(404).json({
@@ -47,7 +47,7 @@ export const addProductHandler = async (req, res) => {
     const { user_id, name, description, price, stock } = req.body;
 
     if (!user_id || !name || !description || price == null || stock == null) {
-        return res.status(400).json({ status: "fail", message: "All fields are required" });
+        return res.status(400).json({ status: "fail", message: "all fields are required" });
     }
 
     if (name.includes(" ")) {
