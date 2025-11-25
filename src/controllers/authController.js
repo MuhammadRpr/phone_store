@@ -12,3 +12,17 @@ export const registerHandler = async (req, res, next) => {
         next(error);
     }
 };
+
+export const loginHandler = async (req, res, next) => {
+    try {
+        const response = await AuthService.login(req.body);
+
+        res.status(200).json({
+            status: "success",
+            message: "login successfully",
+            data: response,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
